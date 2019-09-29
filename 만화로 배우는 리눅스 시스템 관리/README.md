@@ -4,15 +4,47 @@
 
 <br/>
 
-#### 1. 다른 컴퓨터를 리모트로 조작하고 싶어(SSH)    
+## 1. 다른 컴퓨터를 리모트로 조작하고 싶어(SSH)    
 
 SSH는 secure Shell의 약어   
 다른 PC에 네트워크 경유로 로그인해서 자기 PC 처럼 조작 가능   
-
+```  
 ex) ssh user@127.0.0.1   
+```   
 
-#### 2. 임시로 관리자 권한을 얻고 싶어(sudo)    
+## 2. 임시로 관리자 권한을 얻고 싶어(sudo)    
 
-sudo 명령어로 임시 관리자 권한 획득 가능   
-ex) sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist  
+sudo 명령어로 임시 관리자 권한 획득 가능    
+```   
+ex) sudo launchctl load /Library/LaunchDaemons/   org.jenkins-ci.plist  
+```   
+
+
+## 3. 다양한 문자열을 한 번에 검색하고 싶어(grep)  
+
+grep: global regular expression print  
+파일 내용에 문자열이 포함되어 있는지 검색  
+정규 표현식과 같이 사용하면 좋다    
+```   
+ex) grep -r "may" /var/share    
+-r 옵션은 서브 폴더까지 검색  
+-E 옵션은 정규 표현식으로 검색    
+-i 옵션은 대소문자를 무시하고 검색  
+```   
+
+
+## 4. 터미널에서도 대화형으로 파일을 편집하고 싶어(vim)
+명령줄 텍스트 에디터의 vim은 vi의 강화판  
+vim의 기본이 되는 vi는 일반적인 PC가 아직 없던 시대에 텐키나 커서 키, 마우스 등이 없던 환경을 위해 만들어짐. 그래서 하나의 키가 여러 역할을 하도록 설계되어 있음  
+노멀 모드: 홈 화면. 다른 모드에서 ESC를 누르면 노멀 모드로 변경됨. :wq 하면 저장 후 종료  
+끼워넣기 모드: 홈 화면에서 i 누르면 됨.  
+검색 모드: 홈 화면에서 / 누른 후 찾고 싶은 문자열 입력. n 누르면 다음, shift는 이전 문자열로 이동. /\v 로 정규 표현식 가능    
+``` 
+ex) /name
+    /\v(I|i|L)
+``` 
+
+
+
+
 
