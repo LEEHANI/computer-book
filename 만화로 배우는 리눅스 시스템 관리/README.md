@@ -10,16 +10,17 @@ SSH는 secure Shell의 약어
 다른 PC에 네트워크 경유로 로그인해서 자기 PC 처럼 조작 가능   
 ```  
 ex) ssh user@127.0.0.1   
-```   
+```  
 
+<br/>  
 ## 2. 임시로 관리자 권한을 얻고 싶어(sudo)    
 
 sudo 명령어로 임시 관리자 권한 획득 가능    
 ```   
-ex) sudo launchctl load /Library/LaunchDaemons/   org.jenkins-ci.plist  
+ex) sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist  
 ```   
 
-
+<br/>  
 ## 3. 다양한 문자열을 한 번에 검색하고 싶어(grep)  
 
 grep: global regular expression print  
@@ -32,7 +33,7 @@ ex) grep -r "may" /var/share
 -i 옵션은 대소문자를 무시하고 검색  
 ```   
 
-
+<br/>  
 ## 4. 터미널에서도 대화형으로 파일을 편집하고 싶어(vim)
 명령줄 텍스트 에디터의 vim은 vi의 강화판  
 vim의 기본이 되는 vi는 일반적인 PC가 아직 없던 시대에 텐키나 커서 키, 마우스 등이 없던 환경을 위해 만들어짐. 그래서 하나의 키가 여러 역할을 하도록 설계되어 있음  
@@ -44,7 +45,7 @@ ex) /name
     /\v(I|i|L)
 ``` 
 
-
+<br/>  
 ## 5. vim에서도 복사 & 붙이기 & 되돌리기를 하고 싶어(yank)  
 GUI 애플리케이션과 콘솔 애플리케이션은 전혀 다른 규칙으로 동작하기 때문에 Ctrl+C,V가 동작하지 않는다.    
 복사: V 키 누르고 복사하고 싶은 영역까지 커서 옮긴 다음에 Y 누르기   
@@ -52,7 +53,7 @@ GUI 애플리케이션과 콘솔 애플리케이션은 전혀 다른 규칙으�
 되돌리기: 노멀 모드에서 U 키   
 되돌리기의 되살리기: Ctrl+R   
 
-
+<br/>  
 ## 6. 갑작스러운 네트워크 끊김에서 복귀하고 싶어(가상 터미널)  
 가상 단말은 내 콘솔과 다른 컴퓨터의 콘솔이 있을 때, 그 사이를 중계하는 역할을 한다.   
 SSH 접속이 갑작스럽게 끊겨도 가상 단말은 계속 동작 상태이기 때문에 다시 접속하면 하던 작업을 이어서 할 수 있다.  
@@ -65,14 +66,26 @@ Ctrl+B -> P previous
 Ctrl+B -> N next
 그외에 scree, byobu가 있다. 
 
-
+<br/>  
 ## 7. 다른 화면도 보면서 작업하고 싶어(화면 분할) 
 tmux 단말에서 화면 분할   
-가로 분할: Ctrl+B, "  
-세로 분할: Ctrl+B, %  
-포커스 이동: Ctrl+B, 상하좌우 방향키  
-분할 해제: exit  
-스크롤: Ctrl+B, [ ]  
+- 가로 분할: Ctrl+B, "  
+- 세로 분할: Ctrl+B, %  
+- 포커스 이동: Ctrl+B, 상하좌우 방향키  
+- 분할 해제: exit  
+- 스크롤: Ctrl+B, [ ]  
 
 
+<br/>  
+## 8. 최근 실행한 명령어를 호출하고 싶어(명령어 이력)    
+- 사용자가 입력한 명령어 이력:   
+```
+vim ~/.bash_history
+```
+- 명령어 이력 부르기: 위쪽 방향키    
+- 후방(이전) 검색 ```Ctrl + R ```  
+- 전방(이후) 검색 ```Ctrl + S ```  
+- 전방 검색을 하려면 ```~/.bashrc``` 파일에 맨 밑에 ```stty stop undef```설정 추가하고 ```source ~/.bashrc``` 명령어로 적용 시켜야 쓸수있음  
 
+
+<br/>
