@@ -2,9 +2,11 @@
 ===
 :명령어 & 셸 스크립트 입문   
 
+- [ssh](#SSH)
+
 <br/>
 
-## 1. 다른 컴퓨터를 리모트로 조작하고 싶어(SSH)    
+## 1. 다른 컴퓨터를 리모트로 조작하고 싶어(#SSH)    
 
 SSH는 secure Shell의 약어   
 다른 PC에 네트워크 경유로 로그인해서 자기 PC 처럼 조작 가능   
@@ -96,4 +98,13 @@ function share_history {
 PROMPT_COMMAND='share_history'
 shopt -u histappend
 ```  
+<br/>
+
+## 10. 네트워크 건너서 파일을 복사하고 싶어(scp)  
+scp(Secure Copy)는 네트워크를 통해서 파일을 복사하는 명령어  
+- scp가 SSH를 호출하고, SSH 통신 경로를 통해 파일을 전송한다.
+- 기본 형식 ```scp [-r, 하위폴더까지] [복사할 파일] [로그인할사용자@접속할 컴퓨터 IP]```  
+- 내 컴퓨터 test.txt 파일 -> 다른 컴퓨터 저장 경로 ``` scp ./test.txt may@192.168.1.0:/tmp/```  
+- 다른 컴퓨터 test.txt 파일 -> 내 컴퓨터  저장 경로 ``` scp may@192.168.1.0:/tmp/test.txt ~/```  
+
 <br/>
