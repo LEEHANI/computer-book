@@ -251,4 +251,28 @@ cat $log | grep -v "/live" | cut -d " " -f 7 | sort | uniq -c | sort -r | head -
   + ```>>```가 두개라면, 기존 파일에 추가    
 <br/>
 
+## 20. 명령줄 지정으로 작업 내용을 바꾸고 싶어(명령줄 인수)
+- 명령어 라인 인수를 통해 명령어에 대해 추가 지시를 내릴 수 있다. 스페이스로 구분
+  + 스크립트 내부에 실행 시 지정한 인수 값을  ```$1```, ```$2```와 같은 변수로 참조
+```
+#!/bin/bash
+directory=/tmp
+source="${directory}/$1"
+result="${directory}/$2"
+scho "$source 처리중"
+cat $source | cut -d "," -f 1-3 sort -t "," -k 3 > $result
+echo "$result 결과 출력 완료"
+```
+  + ```./sort_by_count.sh items_category1.csv items_category1_sorted.csv```로 사용
+- 인수가 많아지면 ```-b```, ```-o```와 같이 의미가 있는 이름으로 붙일 수 있다
+```
+while getopts b:o OPT
+do
+  case $OPT in
+    b) base="$OPTARG" ;;
+    o) output="$OPTARG" ;;
+  esac
+done    
+```
+<br/>
 
