@@ -54,6 +54,18 @@ KOCW 운영체제
   + Multi Programming
     * medium-term scheduler
     * context switching
+- [7, 8, 9강 CPU 스케줄링](#7-8-9-강-cpu-스케쥴링-알고리즘)
+  + 선점 vs 비선점 
+  + CPU 스케줄링
+    * FCFS
+    * SJF
+    * SRT
+    * Priority
+    * RR
+  + 프로세스 생성과 종료 
+  + 쓰레드 
+    * concurrent vs simultaneous
+  + 쓰레드 vs 프로세스 
 
 
 
@@ -77,7 +89,7 @@ KOCW 운영체제
 - 운영체제는 하드웨어를 잘 관리, 성능향상, 사용자에게 편의성 제공
 
 ## 부팅
-![img1](./booting.png)
+![img1](./images/booting.png)
 - 컴퓨터 구조: 프로세서, 메인 메모리(RAM, ROM, 휘발성), 하드디스크(보조메모리), POST, 부트로더
   1) 파워를 키면 프로세서는 롬에있는 메모리를 읽어온다. 
   2) POST(Power-On Self-Test). 내 컴퓨터가 얼마들어있고 메인메모리는 얼마들어있고 키보드, 마우스는 잘 꽂혀있는지 점검
@@ -209,7 +221,7 @@ H/W: 모니터, 프린터, 키보드, 마우스 ...
 
 
 ## 운영체제 서비스
-![img2](./operating_system.png)
+![img2](./images/operating_system.png)
 
 - ```프로세스 관리(process management)``` 
   + 프로세스 : 메모리에서 실행 중인 프로그램
@@ -253,7 +265,7 @@ H/W: 모니터, 프린터, 키보드, 마우스 ...
   + ```무덤 속 프로그램```. 하드디스크에 잠들어 있는 프로그램
   + ```살아 움직이는 프로세스```. 메모리를 할당받아 실행 중인 프로그램. (== task, job)
 - 프로세스 상태 
-![process_state](./process_state.png)
+![process_state](./images/process_state.png)
   + new: 메인 메모리로 올라 온 상태 
   + ready: 초기화를 마치고 실행 준비 중인 상태 
   + running: 실행 상태
@@ -456,7 +468,7 @@ O/S는 관리 부서들의 모임인데 그 중 중요한 부서는 프로세스
   + The Third R/W problem
 
 ## Dining Philosopher Problem  
-![식사하는 철학자](./An_illustration_of_the_dining_philosophers_problem.png)
+![식사하는 철학자](./images/An_illustration_of_the_dining_philosophers_problem.png)
 - 식사하는 철학자 문제 
   + 원형 테이블에 5명의 철학자, 5개의 젓가락이 있다. 철학자는 생각->식사->생각->식사를  반복
   + 식사하려면 2개(왼쪽, 오른쪽)의 젓가락이 필요하다  
@@ -505,6 +517,7 @@ O/S는 관리 부서들의 모임인데 그 중 중요한 부서는 프로세스
 
 # 16강 모니터
 ## 모니터 
+![monitor](./images/monitor.png)
 - 세마포는 오래된 동기화 기법 
 - 세마포보다 고수준 개념
 - 구조
@@ -521,12 +534,305 @@ O/S는 관리 부서들의 모임인데 그 중 중요한 부서는 프로세스
 
 # 17강 정리와 복습(1)
 - CPU 스케줄링 
+  + FCFS
+  + SJF 
+  + Priority 
+    * 선점 
+    * 비선점
+  + RR 
+- 동기화 : 임계구역 문제 해결. 원하는대로 프로세스 실행 순서 제어 
+  + 세마포 
+  + 모니터 
+
+# 18강 주기억장치 관리 개요 
+
+## 주기억장치 관리(Main Memory Management)
+- 역사 
+  + Core memory
+  + 진공관 메모리
+  + 트랜지스터 메모리 
+  + 직접회로 메모리 
+- 메모리는 늘어났지만 프로그램도 그만큼 증가해 메모리는 언제나 부족함 
+- 기계어/어셈블리어 -> C언어 -> 자바, 객체지향 언어 
+- 숫자 처리 -> 문자 처리 -> 멀티미디어 처리 -> 빅 데이터 
+- 어떻게 메모리를 효과적으로 사용할 수 있을까?
+  + ```메모리 낭비 없애기```
+  + ```가상 메모리(virtual memory)```
+- 프로그램을 메모리에 올리기
+![assing_a_program_to_memory](./images/assign_a_program_to_memory.png)  
+  + 메모리 구조 
+    * 주소(Address) + 데이터(Data)
+  + 프로그램 개발 
+  ![assing_a_program_to_memory](./images/program_build.png)
+    * 원천파일(Source file): 고수준언어 또는 어셈블리언어 
+    * 목적파일(Object file) : 컴파일 또는 어셈블 결과 
+    * 실행파일(Excecutable file) : 링크 결과
+  + 프로그램 실행: code(기계어) + data + stack 
+- 실행파일을 메모리에 올리기
+  + 메모리 몇 번지에?
+  + 다중 프로그래밍 환경에서는?
+  + MMU(Memory Management Unit) 사용
+  ![MMU_three_register](./images/MMU_three_register.png)
+    * 메인 메모리에 할당되는 주소가 유동적이기 때문에 재배치 레지스터를 사용해 변경한다. 
+    * MMU는 base나 limit의 범위를 멋어나면 인터럽트가 발생하여 그 프로그램을 강제 종료시킨다. 
+    * base register, limit register, relocation register(물리주소 속이기)
+  + 주소 구분  
+    * 논리주소(logical address, CPU) vs 물리주소(physical address, 메인 메모리 주소)
+
+# 19강 메모리 절약 
+## 메모리 낭비 방지 
+- ```동적 적재(Dynamic Loading)```
+  + load: 만들어진 실행파일을 메모리에 올리는 것 
+  + ```메모리 자원이 귀하니, 프로그램 실행에 반드시 필요한 루틴/데이터만 메인메모리에 적재하자 !```
+    * 모든 루틴이 다 사용되는 것이 아니다.(오류처리)
+    * 모든 데이터가 다 사용되는 것이 아니다(배열)
+    * 실행 시 필요하면 그때 해당 부분을 메모리에 올린다. 
+  + 현대가 O/S가 대부분이 사용하는 기술   
+  + 모든 루틴/데이터를 적재하는 것을 정적 적재라고 한다. 
+- ```동적 연결(Dynamic Linking)```
+  + printf() 등 공통으로 사용되는 라이브러리를 메모리에 중복으로 올리는 것은 낭비다 
+  + ```원래는 실행파일 만들 때 링크했는데(정적 연결), 로드된 다음에 링크 하기(동적 연결)``` 
+  + 오직 하나의 라이브러리 루틴만 메모리에 적재하여 다른 애플리케이션 실행 시 이 루틴과 연결 
+  + 리눅스는 공유 라이브러리(.so, shared library), 윈도우즈는 동적 연결 라이브러리(.dll, Dynamic Linking Library)
+- ```Swapping```
+  + 메모리에 적재되어 있으나 현재 사용되지 않고 있는 프로세스를 이미지형태로 만든 후, 메모리 활용도 높이기 위해 Backing store(=swap device)로 몰아내기 
+    * backing store에 몰아낸 정보는 하드디스크에 존재하는 프로그램(exe. file system)과는 전혀 다른 데이터 
+    * Swap-Out: Main Memory -> Backing Store 
+    * Swap-In: Backing Store -> Main Memory
+  + 하드디스크 : file system + backing store 
+    * backing store == main memory 비슷
+  + swap-in할 때 MMU의 relocationg register로 적재 위차 바꿔주기
+  + 프로세스 크기가 크면 backing store 입출력에 부담이 크다   
+
+# 20강 연속 메모리 할당 
+## 연속 메모리 할당(Contiguous Memory Allocation)
+![hole](./images/hole.png)
+- 다중 프로그래밍 환경 
+  + 부팅 직후 메모리 상태: O/S + big single hole
+  + 프로세스 생성 & 종료 반복-> scattered holes
+- ```메모리 단편화(Memory fragmentation)```  
+  + 프로세스 생성과 종료를 반복하면 메모리 단편화 발생 
+  + Hole 들이 불연속하게 흩어져 있기 때문에 프로세스 적재 불가 => ```외부 단편화(external fragmentation) 발생``` 
+- 연속 메모리 할당 박식
+  + First-fit(최초 적합)
+    * 홀을 순차적으로 탐색했을 때 제일 먼저 발견하는 홀에 메모리에 적재 
+    * 속도, 이용률 높음
+  + Bast-fit(최적 적합)
+    * 홀의 사이즈가 제일 비슷한 메모리에 적재  
+    * 이용률 높음
+  + Worst-fit(최악 적합)
+    * 홀의 사이즈가 제일 큰 사이즈에 메모리를 적재   
+- ```연속 메모리 할당 방식도 외부 단편화로 인한 1/3 수준으로 메모리 낭비됨```
+- ```compaction``` : 흩어져 있는 hole을 한곳으로 모으면 어떨까? 
+  + hole을 옮기는 오버헤드가 크고 어떻게 옮겨야 빠르게 합칠 수 있는지에 대한 최적 알고리즘이 없다. 
+
+# 21강 페이징 
+## 페이징(Paging)
+![paging](./images/paging.png)
+- 프로세스가 연속하지 않으면 어떨까?
+- ```프로세스를 일정 크기(=페이지)로 잘라서 메모리에 적재하기```
+  + 메모리는 프레임의 집합
+  + 프레임 크기 == 페이지 크기
+- MMU안에 relocation register 갯수를 페이지 만큼 둬서 연속된 메모리 공간에 위치해있다고 CPU를 속이자! 
+  + MMU는 페이지 테이블(page table)이 된다 
+- 주소 변환을 통해 내부 단편화 해결  
+- 페이지 단위로 쪼갰으니 메모리에 아무곳이나 올리면 되고, 페이지 테이블에 위치를 기록해놓으면 된다. 
+
+## 주소 변환(Address Translation)
+![address_translation](./images/address_translation.png)
+- 논리주소(Logical address) 
+  + CPU logical address. p(page number), d(displacement)
+- 논리주소 -> 물리주소(Physical address)
+  + f(frame index), displacement) 
+- 예제
+  + page size = 4byte, 
+  + page table :  5, 6, 1, 2
+  + 논리주소 13번지는 물리주소 몇 번지?
+    * 13을 2진수로 바꾸면 1101(logical address)
+    * 4byte는 2^2이니, 2진수에서 뒤에 두 자리 '01' 은 d, 남은 앞자리 '11'이 p이다
+    * 11은 10진수로 3이므로 page no가 3번째를 보면 값이 2(frame no)이다. 
+    * 2는 2진수로 '10'이니 f는 '10'이고, d는 그대로니 '01'이다. 즉, 1001(physical address)
+    * 1001는 10진수로 9이니, 9번째 프레임에 존재
+
+## 내부단편화, 페이지 테이블 
+- ```내부 단편화(internal Fragmentation)```
+  + 프로세스 크기가 페이지 크기의 배수가 아니라면 프레임이 남는다 
+  + 페이징을 써서 내부 단편화는 없앴지만 내부 단편화 발생
+  + 외부 단편화에 비해 미미한 낭비 
+- 페이지 테이블 만들기 
+  + CPU 내부 레지스터
+    * 장: 내부에 있기 때문에 주소 변환이 빠름 
+    * 단: 테이블 크기를 크게 만들 수 없다. 
+  + 메모리 
+    * 장: 테이블 크기가 커도 상관없음 
+    * 단: 2번 접근해야 하므로 속도가 느림 
+  + TLB(Translation Look-aside Buffer)
+     * 별도의 칩(SLAM)을 이용 캐시 
+     * CPU 레지스터와 메모리의 중간쯤 
+
+## 보호와 공유
+- 보호(Protection)
+![rwx](./images/protection_rwx.png)
+  + 해킹 등 방지
+  + 모든 주소는 페이징 테이블을 경유
+  + 페이지 테이블 엔트리마다 ```r```(read), ```w```(write), ```e```(exe) 비트를 둬서 접근 제어 
+  + 접근이 불가능한데 하려하면 인터럽트 발생
+- 공유(Sharing)
+  + 메모리 낭비 방지
+  + 같은 프로그램을 쓰는 복수 개의 프로세스가 있다면, Code + data + stack에서 code는 공유 가능(단, code 내용이 바뀌지 않는다는 전제. non-self-modifying code == reentrant code == pure code)    
+  + context switching이 일어나면 page table에서 code부분은 바뀌지않고 data, stack 부분만 바뀜 
 
 
+# 21강 세그맨테이션
+## 세그멘테이션(Segmentation)
+- ```프로세스를 논리적 내용(=세그먼트)으로 잘라서 메모리에 배치 !```
+  + 프로세스는 세그먼트(segment)의 집합 
+  + 세그먼트의 크기는 일반적으로 같지 않다.   
+- 세그먼트를 메인 메모리에 할당 
+  + MMU 내의 재배치 레지스터 값을 바꿈으로써 ```CPU는 프로세스가 연속된 메모리 공간에 위치한다고 착각 !!!```
+  + MMU는 세그멘트 테이블(segment table)이 된다 
+  + segment는 크기가 일정하지 않기 때문에, 테이블에 limit 정보가 반드시 필요! 페이장과 다르게 2차원 배열 
+## 주소 변환
+- 논리주소(Logical address) 
+  + CPU logical address. s(segment number), d(displacement) 
+- 논리주소 -> 물리주소(Physical address)
+  + 세그먼트 테이블 내용: Base + Limit
+  + limit를 넘어서면 segment violation 예외 처리 
 
-## 
+## 보호와 공유
+- 보호(Protection)
+  + 모든 주소는 세크먼트 테이블을 경유한다.
+  + 세그먼테 테이블 엔트리마다 r,w,x 비트 둬서 접근 제어
+  + ```페이징보다 우월```
+    * 페이징은 code + data + stack 영역이 있을 때 ```영역이 섞일 수 있다.```  
+    * 페이징은 영역이 섞여있을 때 r,w,x 제어 하기가 어렵다. 
+- 공유(Sharing)
+  + 같은 프로그램을 쓰는 복수 개의 프로세스가 있다면, code는 공유 가능 
+  + ```페이징보다 우월```
 
+## 외부 단편화
+- 세그먼트 크기는 고정이 아니라 가변적 
+- 크기가 다른 각 세그먼트를 메모리에 두려면 동적 메모리 할당 문제가 됌 ..
+- fist-fit, best-fit, worst-fit, compaction 등 문제 
+- ```세그멘테이션 + 페이징``` 
+  + 세그멘테이션은 보호와 공유면에서 효과적
+  + 페이징은 외부 단편화 문제를 해결 
+  + 세그먼트로 먼저 자르고, 잘린 얘를 페이징으로 자르자 => paged segmentation
+  + 주소 탐색할 때마다 세그먼트 테이블 + 페이징 테이블을 거쳐야 하므로 느림 
 
+# 22강 가상메모리 
+## 가상 메모리(Virtual Memory)
+- 가상 메모리 
+  + 물리 메모리 크기 한계 극복 
+    + 100MB 메인 메모리에서 200MB 크기의 프로세스 실행 불가 
+  + 어떻게 해야할까?
+    + 프로세스 이미지를 모두 메모리에 올릴 필요는 없다. 
+    + ```현재 실행에 필요한 부분 메모리만 적재하자(동적 적재와 비슷한 개념)``` 
+## ```요구 페이징(Demand Paging)```
+![demand_paging](./images/demand_paging.png)
+- 프로세스 이미지는 backing store에 저장 
+- 프로세스는 페이지의 집합 
+- 지금 필요한 페이지만 메모리에 올린다(load) (= demand 페이지만 메모리에 올린다)
+- 페이지 테이블에 valid 비트를 둬서 현재 메모리에 페이지가 있는지 없는지 판단(0 없음. 1 있음)
+- valid 비트가 0이면 인터럽트 신호를 발생시켜 운영체제 내부의 ISR로 점프 
+## 페이지 결함(Page Fault)
+<!-- ![page_fault](./images/page_fault.png) -->
+- ```접근하려는 페이지가 메모리에 없다(invalid)```
+- 페이지가 Memory에는 없지만 Backing store에는 존재 
+- Backing store에서 해당 페이지를 가져온다.
+- steps in handling a page fault 
+  + 페이지 결함이 일어나면 내부적으로 어떤 일이 일어나는가?  
+- pure demand paging vs prepaging
+  + pure demand
+    + 처음 프로그램을 실행했을 때 페이지를 아무것도 가져오지 않는다.
+    + 그래서 처음부터 인터럽트 많이 발생 
+    + 오래걸림 
+    + 필요한 페이지만 올릴 수 있으니 메모리를 절약할 수 있음 
+  - prepaging
+    + 당장 필요하지 않더라도 필요할 거 같은 페이지를 미리 가져오기 
+    + 미리 들고 왔으니 메모리 낭비 발생 
+    + page fault는 적게 일어날 수 있으니 빠르다
+- swapping vs demand paging
+  + swapping
+    * 단위가 전체 프로세스 단위 
+  + demand paging
+    * 단위가 페이지 단위     
+
+# 23강 요구 페이징 
+## 유효 접근 시간 
+- page fault 시간 구하기 
+## 지역성의 원리 
+- Locality of reference
+  + CPU가 참조하는 주소 
+  + 메모리 접근은 시간적, 공간적 지역성을 가진다.
+    * 컴퓨터는 보통 반복문을 사용하니, page fault가 한 번 일어나더라도 그 다음 참조는 시간, 공간이 줄어든다
+  + 실제 페이지 부재 확률은 매우 낮다. 
+- ```HDD(하드디스크)는 접근 시간이 너무 길다 !!```
+- Backing store를 SSD 또는 느린 저가 DRAM 사용하자 
+
+## 페이지 교체(Page Replacement)
+- Demand Paging
+  + 필요한 페이지만 backing store에서 가져온다
+  + 프로그램 실행이 계속됨에 따라 요구 페이지가 늘어나고, 언젠가 메모리는 가득 차게 된다. 
+- Page full!!   
+- ```victim page(희생양 페이지)```
+  + 메모리가 가득 차면 추가로 페이지를 가져오기 위해 어떤 페이지는 backing store로 몰아내고(pasge-out) 그 빈 공간으로는 페이지를 가져온다(page-in)
+  + 어떤 페이지를 몰아낼 것인가? !!! 
+    * CPU에 연산이 진행된 페이지는 modify 됐으므로, 하드디스크에 write 작업을 해야하므로 시간이 오래 걸린다.
+    * ```MMU에 modified bit(=dirty bit)를 둬서 기왕이면 modify 되지 않은 페이지를 victim으로 선택하자``` 
+    * modify 되지 않은 비트는 write 작업 없이 그냥 쫒아내면 된다. 
+  + 여러 페이지 중에서 무엇을 victim 으로?
+    * Random
+    * First-In First-Out(FIFO)
+    * 그 외 
+
+## 페이지 교체 알고리즘
+- victim을 하기 위해 어떤 애로 정할것인가 알고리즘 
+- 성능 비교를 하기 전에 알아야 할 것 
+- Page reference string
+  + 페이지 참조 열. 페이지 단위로 참조하기 위한 단위(?) 
+  + 예를들어 
+  ```
+    Page size = 100 byte
+    CPU가 내는 주소: 100 101 102 432 612 103 104 611 612
+    페이지 번호 = 1 1 1 4 6 1 1 6 6
+    page reference string = 1 4 6 1 6
+  ```
+  + ```숫자가 연속되어서 일어나면 page fault는 일어나지 않음``` 
+  + 예시의 page size가 100 byte이므로 100-199까지 페이지를 가져옴
+- ```First-In First-Out(FIFO)```
+  + 가장 먼저 들어온 페이지를 아웃 시킨다 
+  + 예제
+    * 페이지 참조열 = 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1 
+    * of frames = 3
+|7|0|1|2|0|3|0|4|2|3|...|
+|-|-|-|-|-|-|-|-|-|-|-|
+|o|o|o|o|x|o|o|o|o|o|...|
+|`7`|7|7|`2`|2|2|2|`4`|4|4|...|
+|-|`0`|0|0|0|`3`|3|3|`2`|2|...|
+|-|-|`1`|1|1|1|`0`|0|0|`0`|...|
+    * 15 page faults
+  + Belady's Anomaly
+  ![belady's_anomaly](./images/belady's_anomaly.png)
+    + 프레임 수(=메모리 용량)가 증가하면 page fault가 줄어드는 것이 정상인데, 특정 부분에서는 page fault가 오히려 증가하는 이상 현상이 발생한다. 
+- Optimal(OPT)
+  + 가장 효율적인 교체 알고리즘 
+  + 앞으로 page fault가 일어나지 않을 page를 택해서 victim 하자 
+  + 예제
+    * 페이지 참조열 = 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1 
+    * of frames = 3
+|7|0|1|2|0|3|0|4|2|3|0|...|
+|-|-|-|-|-|-|-|-|-|-|-|-|
+|o|o|o|o|x|o|x|o|x|x|x|...|
+|`7`|7|7|`2`|2|2|2|2|2|2|2|...|
+|-|`0`|0|0|0|0|0|`4`|4|4|`0`|...|
+|-|-|`1`|1|1|`3`|3|3|3|3|3|...|
+    * 9 page faults
+  + 미래에 어떤 프로세스가 사용되는지 알 수 없기 때문에 비현실적이다 !!
+- `Least-Recently-Used`(LRU)
+  + 최근에 가장 적게 사용된 페이지를 victim으로 지정하자 
+  + Optimal과 다르게 과거를 봄 
+  + 
 
 
 # 운영체제에서 잡아야 할 흐름!!!
@@ -538,7 +844,13 @@ O/S는 관리 부서들의 모임인데 그 중 중요한 부서는 프로세스
     * 효율성 증대
       - busy-wait 하지 않기 
       - orderling 피하기 => 못피하면 deadlock에 빠짐
-
+- 메모리 관리
+  + 프로세스 중 당장 필요한 부분만 메모리에 올리기 
+  + 필요한 부분만 쪼개서 올리기 
+    * 페이징
+    * 세그먼트 
+  + 프로세스가 연속하지 않아도됨. MMU 덕분에    
+  + valid bit 추가 
 
 의문
 - time-sharing-system == RR?
