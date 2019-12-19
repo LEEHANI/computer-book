@@ -77,3 +77,4 @@ https://www.youtube.com/playlist?list=PLVsNizTWUw7HhYtI-4GGmlJ5yxNdwNI_X
  + 클러스터형 인덱스가 테이블에 아예 없는 것이 좋은 경우도 있다
  + 사용하지 않는 인덱스는 제거하자 
    * 주기적으로 OPTIMIZE TABLE 구문이나 ANALYZE TABLE 구문으로 인덱스를 재구성하자 
+   
