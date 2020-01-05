@@ -5,7 +5,10 @@
 - [0장 리팩토링이란](#0장-리팩토링이란)
 - [1장 매직 넘버를 기호 상수로 치환](#1장-매직-넘버를-기호-상수로-치환)
 - [2장 제어플래그 삭제](#2장-제어플래그-삭제)
+- [3장 어서션 도입](#3장-어서션-도입)
 - [4장 널 객체 도입](#4장-널-객체-도입)
+- [5장 메서드 추출](#5장-메서드-추출)
+- [6장 클래스 추출](#6장-클래스-추출)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -229,3 +232,60 @@ private void prinContentBorder(int times, String content)
 }
 ```
 
+## 6장 클래스 추출
+: 클래스의 책임이 너무 많은 경우
+- 문제
+  + 한 클래스가 너무 많은 책임을 지고 있을 경우
+- 해법
+  + 묶을 수 있는 필드와 메서드를 찾아 새로운 클래스로 추출
+- 방법
+  1. 새로운 클래스 작성 `class Author`
+  2. 필드 이동 `authorName` -> `name`
+  3. 메서드 이동      
+  4. 추출한 클래스 검토 
+- 한 걸음 더 나아가기
+  + 양방향 링크는 피한다
+    - `Book` 클래스와 `Author` 클래스를 서로 링크하지 않고, 단방향을 유지한다. 
+  + 역 리팩토링
+    - 클래스 추출을 지나치게 하지 않는다.    
+- 리팩토링 전 
+```java
+public class Book
+{
+    private String title;
+    private String isbn;
+
+    private String authorName;
+    private String authorEmail;
+
+    public String getAuthorName()
+    {
+        return authorName;
+    }
+}
+```
+- 리팩토링 후 
+```java
+public class Book
+{
+    private String title;
+    private String isbn;
+
+    private Author author;
+
+    public String getAuthorName()
+    {
+        return author.getName();
+    }
+}
+class Author
+{
+    private String name;
+    private String email;
+
+    public String getName()
+    {
+        return name;
+    }
+}
+```
