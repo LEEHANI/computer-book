@@ -289,3 +289,35 @@ class Author
     }
 }
 ```
+
+## 7장 분류 코드를 클래스로 치환
+: int로 객체를 구분하는 경우 
+- 문제
+  + 분류 종류를 int 같은 기본 타입으로 분류하는 경우, `이상한 값`이 되거나 `다른 분류 코드와 혼동`될 수 있다.  
+- 해법
+  + 분류 종류를 나타내는 새로운 클래스를 작성 
+- 리팩토링 전 
+```java
+public class Item
+{
+    public satic final int TYPECODE_BOOK = 0;
+    public satic final int TYPECODE_DVD = 1;
+    public satic final int TYPECODE_SOFTWARE = 2;
+
+    private final int typecode;
+}
+- 리팩토링 후 
+```java    
+public class ItemType
+{
+    public static final ItemType BOOK = new ItemType(0);
+    public static final ItemType DVD = new ItemType(1);
+    public static final ItemType SOFTWARE = new ItemType(2);
+    ...
+}
+public class Item
+{
+    private final ItemType itemType;
+}
+```
+
