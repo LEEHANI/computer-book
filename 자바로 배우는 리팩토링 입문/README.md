@@ -9,6 +9,7 @@
 - [4장 널 객체 도입](#4장-널-객체-도입)
 - [5장 메서드 추출](#5장-메서드-추출)
 - [6장 클래스 추출](#6장-클래스-추출)
+- [7장 분류 코드를 클래스로 치환](#7장-분류-코드를-클래스로-치환)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -22,7 +23,7 @@
   + 시간이 너무 촉박할 때
 
 
-## 1장 매직 넘버를 기호 상수로 치환`
+## 1장 매직 넘버를 기호 상수로 치환
 - 매직 넘버를 `상수`나 `enum`으로 바꾸자
   + 매직 넘버만 보고는 숫자의 의미를 알기 어렵다
   + 소스 코드 이곳 저곳에 있으므로 매직 넘버는 수정하기 어려움
@@ -64,14 +65,14 @@ else if (work == DELIVERY)
 
 
 ## 2장 제어플래그 삭제
-: 제어 플래그 때문에 코드그ㅏ 읽기 어려운 경우
+: 제어 플래그 때문에 코드가 읽기 어려운 경우
 - 문제
   + 제어 플래그를 지나치게 사용하면 처리 흐름을 파악하기 어려움
 - 해법  
   + 제어 플래그(flag) 대신에 `break`, `continue`, `return` 등을 써서 처리 흐름을 제어하자
-- 제어 플래그를 사용해야 한다면, flag라는 변수명 대신 변수명을 변경하여 뭘 의미하는지 나타내자 
-  + `initialized`, `debug`, `error`, `done`, `interrupted`, `recurse`
-- 리팩토링 시작
+  + 제어 플래그를 사용해야 한다면, flag라는 변수명 대신 변수명을 변경하여 뭘 의미하는지 나타내자 
+    + `initialized`, `debug`, `error`, `done`, `interrupted`, `recurse`
+- 리팩토링 전
 ```java
 boolean flag = true
 
@@ -183,8 +184,8 @@ public void display()
   + 기존 메서드에서 묶을 수 있는 코드를 추출해 새로운 메서드를 작성
 - 방법 
   + 새로운 메서드에 적절한 이름 붙이기
-    + 메서드 이름은 '동사+명사' 순서로 짓는게 보통이다
-    + 메서드 이름은 '무엇을 하는가(what to do)'를 알 수 있게 짓는 것이 중요     
+    + 메서드 이름은 `동사+명사` 순서로 짓는게 보통이다
+    + 메서드 이름은 `무엇을 하는가(what to do)`를 알 수 있게 짓는 것이 중요     
 - 리팩토링 전
 ```java
 public void print(int times, String content)
@@ -195,6 +196,7 @@ public void print(int times, String content)
         System.out.print("-");
     }
 
+    // 내용 출력
     for(int i = 0 ; i < times, i ++)
     {
         System.out.println("content");
@@ -295,7 +297,9 @@ class Author
 - 문제
   + 분류 종류를 int 같은 기본 타입으로 분류하는 경우, `이상한 값`이 되거나 `다른 분류 코드와 혼동`될 수 있다.  
 - 해법
-  + 분류 종류를 나타내는 새로운 클래스를 작성 
+  + 분류 종류를 나타내는 새로운 클래스를 작성. 기본형 대신 새로운 껍데기를 씌우는 방법. `int -> ItemType class` 
+- 한 걸음 더 나아가기
+  + [class 대신 `enum`을 사용](./7_ReplaceTypeCodeWithClass/advanced/ItemTypeEnum.java)   
 - 리팩토링 전 
 ```java
 public class Item
@@ -306,7 +310,8 @@ public class Item
 
     private final int typecode;
 }
-- 리팩토링 후 
+```
+- [리팩토링 후](./7_ReplaceTypeCodeWithClass/refactoring/ItemType.java) 
 ```java    
 public class ItemType
 {
@@ -320,4 +325,60 @@ public class Item
     private final ItemType itemType;
 }
 ```
+
+## 8장 분류 코드를 하위 클래스로 치환
+: 분류 코드마다 `동작`이 다른 경우(1)
+- 상황
+  + 분류 코드마다 객체가 다른 동작을 함 
+- 문제
+  + switch 문을 써서 동작을 구분함
+- 해법
+  + 분류 코드를 하위 클래스로 치환해서 다형적 메서드를 작성
+- 리팩토링 전 
+```java
+public class Shape 
+{
+    private final int typecode;
+    ...
+    public void draw()
+    {
+        switch (typecode)
+        {
+            case TYPECODE_LINE:
+                ...
+                break;
+
+            case TYPECODE_RECTANGLE:
+                ...
+                break;
+            
+            case TYPECODE_OVAL:
+                ...
+                break;
+
+            default: ;
+        }
+    }
+}    
+```
+- 리팩토링 후 
+```java
+public abstract class Shape
+{
+    public abstract void draw();
+}
+public class ShapeLine extends Shape
+{
+    @Override public void draw() { ... }
+}
+public class ShapeRectangle extends Shape
+{
+    @Override public void draw() { ... }
+}
+public class ShapeOval extends Shape
+{
+    @Override public void draw() { ... }
+}
+```
+
 
