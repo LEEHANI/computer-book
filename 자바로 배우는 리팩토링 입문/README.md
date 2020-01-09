@@ -10,6 +10,7 @@
 - [5장 메서드 추출](#5장-메서드-추출)
 - [6장 클래스 추출](#6장-클래스-추출)
 - [7장 분류 코드를 클래스로 치환](#7장-분류-코드를-클래스로-치환)
+- [8장 분류 코드를 하위 클래스로 치환](#8장-분류-코드를-하위-클래스로-치환)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -331,10 +332,28 @@ public class Item
 - 상황
   + 분류 코드마다 객체가 다른 동작을 함 
 - 문제
-  + switch 문을 써서 동작을 구분함
+  + switch 문을 써서 동작을 구분함. 객체 지향 프로그래밍이라면 switch 문은 악취가 난다고 판단한다. 
 - 해법
   + 분류 코드를 하위 클래스로 치환해서 다형적 메서드를 작성
-- 리팩토링 전 
+- 한 걸음 더 나아가기
+  + [createShape() 생성자는 여전히 악취를 풍기고 있다. 여기서 더 리팩토링을 진행할 수도 있지만, 필요 이상으로 코드가 복잡해 질수 있으므로 균형잡힌 리팩토링이 필요하다.](./8_ReplaceTypeCodeWithSubclasses/advanced/AbstractShape.java) 
+  + `프로그램 규모가 점점 커져서 전체를 파악하기 어려울 때, 기능 추가 예정이 있을 경우 리팩토링을 하는 게 좋다.` 
+  + switch 문과 instanceof 연산자가 풍기는 악취 
+```java
+if (obj instanceof ShapeLine)
+{
+    ..
+}
+else if (obj instanceof Shapeectangle)
+{
+    ...
+}
+else if (obj instanceof ShapeecOval)
+{
+    ...
+}
+```    
+- [리팩토링 전](./8_ReplaceTypeCodeWithSubclasses/before/Shape.java)  
 ```java
 public class Shape 
 {
@@ -361,7 +380,7 @@ public class Shape
     }
 }    
 ```
-- 리팩토링 후 
+- [리팩토링 후](./8_ReplaceTypeCodeWithSubclasses/refactoring/Shape.java) 
 ```java
 public abstract class Shape
 {
