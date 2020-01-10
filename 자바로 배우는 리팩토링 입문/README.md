@@ -11,6 +11,7 @@
 - [6장 클래스 추출](#6장-클래스-추출)
 - [7장 분류 코드를 클래스로 치환](#7장-분류-코드를-클래스로-치환)
 - [8장 분류 코드를 하위 클래스로 치환](#8장-분류-코드를-하위-클래스로-치환)
+- [9장 분류 코드를 상태/전략 패턴으로 치환](#9장-분류-코드를-상태전략-패턴으로-치환)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -399,5 +400,77 @@ public class ShapeOval extends Shape
     @Override public void draw() { ... }
 }
 ```
+
+## 9장 분류 코드를 상태/전략 패턴으로 치환
+: 분류 코드마다 `동작`이 다른 경우(2)
+- 8장과 9장의 차이
+  + 8장에서 배운 분류 코드를 하위 클래스로 치환은 프로그램 실행 중에 객체 분류 코드가 변한다면 사용할 수 없다. 그럴 때는 분류 코드를 상태/전략 패턴으로 치환 방법을 사용해야 한다. 
+  + 코드 중간에 ShapeLine이 ShapeRectangle로 바뀌지 않을 때는 8장 방법을 사용하지만, 바뀐다면 9장 방법을 사용해야 함.
+  + 8장은 생성자에서 객체를 만들기 때문에 실행 중에 도형 종류가 변하지 않는 리팩토링이지만, 9장은 인스턴스의 특정 메서드를 호출할 때마다 상태가 변경되는 상태/전략 패턴을 이용한 리팩토링이다.   
+- 상황
+  + 분류 코드마다 객체가 다른 동작을 함 
+- 문제
+  + `동작을 switch문으로 나누고 있지만 분류 코드가 동적으로 변하므로 분류 코드를 하위 클래스로 치환은 사용 불가`
+- 해법 
+  + 분류 코드를 나타내는 새로운 클래스를 작성해서 상태/전략 패턴을 사용함
+- 한 걸음 더 나아가기 
+  + 상태 패턴과 전략 패턴의 차이
+    - 목적이 다를 뿐 구조적 차이는 없음
+    - `상태(state) 패턴`: 동일한 동작을 객체의 상태마다 다르게 수행해야 할 경우 하위 클래스 메서드로 작성하는 방법 ex)`Logger.start()`
+    - `전략(strategy) 패턴`: 어떻게 객체가 일을 할지 정한다. 같은 문제를 해결하는 알고리즘 방식이 여러 가지가 있다면, 요구에 따른 알고리즘을 선택하여 사용할 수 있도록 하는 패턴이다. 즉, 필요에 따라 클래스를 택하여 갈아 끼우는 방식   
+- [리팩토링 전](./9_ReplaceTypeCodeWithStateStrategy/before/Logger.java) 
+```java
+public class Logger 
+{
+    public static final int STATE_STOPPED = 0;
+	public static final int STATE_LOGGING = 1;
+	
+	private int state;
+	
+	public Logger()
+	{
+		this.state = STATE_STOPPED;
+	}
+	
+	public void start()
+	{
+		switch (state)
+		{
+			case STATE_STOPPED:
+				System.out.println("** START LOGGING **");
+				state = STATE_LOGGING;
+				break;
+				
+			case STATE_LOGGING:
+				break;	
+			
+			default:
+				System.out.println("Inbalid state: " + state);
+		}
+	}
+	...
+}
+```
+- [리팩토링 후](./9_ReplaceTypeCodeWithStateStrategy/refactoring/Logger.java)
+```java
+public class Logger 
+{
+	private State state;
+	
+	public Logger()
+	{
+		setState(State.STOPPED);
+    }
+
+	public void start()
+	{
+		state.start();
+		setState(State.LOGGING);
+	}
+    ...
+}    
+```
+
+
 
 
