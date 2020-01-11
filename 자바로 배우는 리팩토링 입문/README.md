@@ -12,6 +12,8 @@
 - [7장 분류 코드를 클래스로 치환](#7장-분류-코드를-클래스로-치환)
 - [8장 분류 코드를 하위 클래스로 치환](#8장-분류-코드를-하위-클래스로-치환)
 - [9장 분류 코드를 상태/전략 패턴으로 치환](#9장-분류-코드를-상태전략-패턴으로-치환)
+- [10장 에러 코드를 예외로 치환](#10장-에러-코드를-예외로-치환)
+- [11장 생성자를 팩토리 메서드로 치환](#11장-생성자를-팩토리-메서드로-치환)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -471,6 +473,148 @@ public class Logger
 }    
 ```
 
+## 10장 에러 코드를 예외로 치환
+: 에러 처리가 흩어져 있는 경우
+- 문제 
+  + 정상 처리와 에러 처리가 혼재함 
+  + 에러 코드 전파 처리가 넓은 범위에 있음
+- 해법 
+  + 에러 코드 대신에 예외를 사용함
+- 결과 
+  + 정상 처리와 에러 처리를 명확하게 분리 가능 
+  + 에러 코드를 반환해서 전파하지 않아도 됨 
+  + 에러 관련 정보를 예외 객체에 저장 가능   
+- 리팩토링 전 
+```java
+public void execute(String commandSequence)
+{
+    StringTokenizer tokenizer = new StringTokenizer(commandSequence);
+    while (tokenizer.hasMoreTokens())
+    {
+        String token = tokenizer.nextToken();
+        if (!executeCommand(token))
+        {
+            System.out.println("Invalid command: " + token);
+            break;
+        }
+    }
+}
+...
+public boolean executeCommand(String commandString)
+    Command command = Command.parseCommand(commandString);
+    // 에러 전파 if 문
+    if (command == null)
+    {
+        return false;
+    }
+    return executeCommand(command);
+}
 
+```
+- 리팩토링 후 
+```java
+public void execute(String commandSequence)
+{
+    StringTokenizer tokenizer = new StringTokenizer(commandSequence);
+    try
+    {
+        while (tokenizer.hasMoreTokens())
+        {
+            String token = tokenizer.nextToken();
+            executeCommand(token)
+        }
+    }
+    catch (InvalidCommandException e)
+    {
+         System.out.println("Invalid command: " + token);
+    }
+}
+...
+public void executeCommand(String commandString) throws InvalidCommandException
+{
+    Command command = Command.parseCommand(commandString);
+    executeCommand(command);
+}
+```    
 
+## 11장 생성자를 팩토리 메서드로 치환
+: 클래스 이름이 new로 하드 코딩된 경우
+- new를 사용해 인스턴스를 만든다면 생성된 인스턴스의 구체적인 클래스명이 고정되어 버린다. 팩토리 메서드라고 부르는 인스턴스 생성 메서드를 사용하여 클래스명을 숨기자 
+  + 클래스 명을 숨기면 클래스 모드에 따라 달라지는 클래스명을 의식하지 않고 코딩할 수 있다. 
+- 문제
+  + 생성하고 싶은 인스턴스가 속한 실제 클래스를 클라이언트에는 숨기고 싶음 
+- 해법 
+  + 생성자를 팩토리 메서드로 치환함 
+- 결과 
+  + 어느 클래스 인스턴스를 생성할지를 팩토리 메서드 안에서 정할 수 있음 
+  + 생성한 인스턴스를 변경해도 클라이언트 쪽은 변경하지 않아도 됨
+- 방법 
+  + 팩토리 메서드 작성 `createShape()`
+    - 팩토리 메서드 작성
+    - 팩토리 메서드 호출
+  + 생성자 숨기기 
+    - 생성자를 private로 만듦     
+- 한 걸음 더 나아가기
+  + 팩토리 메서드와 생성 메서드
+    - 팩토리 메서드라는 용어는 편리해서 남용되는 경향이 있습니다. 넓은 의미로는 인스턴스를 생성하는 메서드를 모두 팩토리 메서드라고 부릅니다. 좁은 의미로는 GoF의 팩토리 메서드 패턴에 속하는 것만 팩토리 메서드라고 부릅니다. 
+    - 생성 메서드 = 인스턴스를 생성하는 메서드를 총칭
+    - 팩토리 메서드 = GoF의 디자인 패턴과 의미가 같은 인스턴스 생성 메서드          
+- 리팩토링 전 
+```java
+public class Shape
+{
+    ...
+    public Shape(int typecode, int startx, int starty, int endx, int endy)
+    {
+        this.typecode = typecode;
+        this.startx = startx;
+        this.starty = starty;
+        this.endx = endx;
+        this endy = endy;
+    }
+    ...
+}
 
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Shape line = new Shape(Shape.TYPECODE_LINE, 0, 0, 100, 200);
+        Shape rectangle = new Shape(Shape.TYPECODE_RACTANGLE, 0, 0, 100, 200);
+        Shape oval = new Shape(Shape.TYPECODE_OVAL, 0, 0, 100, 200);
+        ...
+    }
+}
+```
+- 리팩토링 후 
+```java
+public class Shape
+{
+    ...
+    public static Shape create(int typecode, int startx, int starty, int endx, int endy)
+    {
+        return new Shape(typecode, startx, starty, endx, endy);
+    }
+
+    private Shape(int typecode, int startx, int starty, int endx, int endy)
+    {
+        this.typecode = typecode;
+        this.startx = startx;
+        this.starty = starty;
+        this.endx = endx;
+        this endy = endy;
+    }
+    ...
+}
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Shape line = Shape.create(Shape.TYPECODE_LINE, 0, 0, 100, 200);
+        Shape rectangle = Shape.create(Shape.TYPECODE_RACTANGLE, 0, 0, 100, 200);
+        Shape oval = Shape.create(Shape.TYPECODE_OVAL, 0, 0, 100, 200);
+        ...
+    }
+}
+```
