@@ -14,6 +14,8 @@
 - [9장 분류 코드를 상태/전략 패턴으로 치환](#9장-분류-코드를-상태전략-패턴으로-치환)
 - [10장 에러 코드를 예외로 치환](#10장-에러-코드를-예외로-치환)
 - [11장 생성자를 팩토리 메서드로 치환](#11장-생성자를-팩토리-메서드로-치환)
+- [13장 상속을 위임으로 치환](#13장-상속을-위임으로-치환)
+- [14장 대리자 은폐](#14장-대리자-은폐)
 
 ## 0장 리팩토링이란 
 - `외부에서 보는 프로그램 동작은 바꾸지 않고 프로그램의 내부 구조를 개선하는 것`
@@ -618,3 +620,155 @@ public class Main
     }
 }
 ```
+
+## 13장 상속을 위임으로 치환
+:IS-A 관계가 아닌데 상속하고 있는 경우
+- 상속과 위임 비교
+  - `상속`: 부모가 자식에게 물려주는(inherit) 것 
+  - `위임`: 인스턴스 내에서 다른 인스턴스의 메서드를 호출해서 처리하는 것을 위임(delegate)한다고 표현
+  - `상속은 클래스 사이의 관계이고, 위임은 인스턴스 사이의 관계이다.` 이는 상위 클래스에서 상속받을 메서드나 필드는 인스턴스마다 정할 수 없지만, 작업을 위탁할 곳은 인스턴스마다 정할 수 있기 때문이다.  
+  - 상속은 정적인 관계이고, 위임은 동적인 관계이다. 
+- 문제 
+  + 하위 클래스가 상위 클래스 기능의 일부만 사용함(상속 거부)
+  + 하위 클래스가 상위 클래스와 IS-A 관계가 아님
+  + 리스코프 치환 원칙 위반 
+- 해법 
+  + 위임을 사용해서 상속을 치환함    
+- 한 걸음 더 나아가기 
+  + 상속은 최후의 무기 
+    - 상속은 클래스 코드 양을 극적으로 줄일 수 있지만, 클래스와 클래스가 정적으로 결합된다. 
+    - 클래스 라이브러리 작성자는 신중히 생각해서 상속 관계를 사용자에게 공개해야 한다. 공개 후 클래스 상속 관계를 번경하기 어렵기 때문이다 
+    - 상속이 모두 나쁜 건 아니다. 템플릿 메서드, 컴포지트, 전략패턴 등 많은 패턴에서 상속을 잘 사용한다. 
+  + 리스코프 치환 원칙 
+    - 상속을 사용하는 게 좋을지 안좋을지를 판단하는 데는 `리스코프 치환 원칙(LSP)`이 편리하다.
+    - 리스코프 치환 원칙은 `Parent 타입의 변수에 Child 클래스의 인스턴스를 할당해도 문제없이 사용 가능`하게 만들어야 하는 원칙이다. 
+  + IS-A 관계와 HAS-A 관계 
+    - 상속은 IS-A 관계가 성립해야 한다. IS-A 관계란 ☆☆는 __의 일종이다 라는 관계이다. ex) Taxi is a car      - 위임은 HAS-A 관계와 관련이 있다. HAS-A 관계는 ☆☆는 __를 가지고 있다라는 관계이다.   
+- 리팩토링 전 
+```java
+class Another
+{
+    void method()
+    {
+        ...
+    }
+}
+class Something extends Another
+{
+    ...
+}
+```
+- 리팩토링 후   
+```java
+class Something
+{
+    Another delegate = new Another();
+
+    void method()
+    {
+        delegate.method();
+    }    
+}
+```
+
+## 14장 대리자 은폐
+:위임 대상까지 노출되어 있는 경우
+- `각 클래스가 상세 구현을 다른 클래스에 지나치게 공개하면 관계가 복잡해진다. 클래스 사이의 관계를 단순화하려면 정보 은폐가 필요하다.` 
+- 문제
+  + 클라이언트 클래스가 서버 클래스뿐만 아니라 대리 클래스까지 이용함 
+- 해법 
+  + 서버 클래스에 위임 메서드를 추가해서 클라이언트 클래스로부터 대리 클래스를 은폐 
+- 결과
+  + 클래스 사이의 불필요한 관계가 줄고 코드 수정이 쉬워짐 
+  + 서버 클래스의 책임이 늘어남  
+- 방법 
+  + 1. 위임메서드 작성
+  + 2. 대리 클래스 은폐 
+- 한 걸음 더 나아가기 
+  + 숨기기의 중요성
+    - 소프트웨어 개발에서 적절한 정보 은폐는 중요하다 
+    - 상세 구현을 숨기지 않으면 클래스끼리 의존관계가 너무 깊어질 위험이 있기 때문이다. 
+    - 의존 관계가 많으면 많을수록 수정해야 하는 클래스가 늘어난다. 
+  + 다양한 은폐 
+    - 접근 제어를 사용한 은폐 
+      + private나 protected로 선언하기
+    - 패키지를 사용한 은폐 
+      + public 없이 클래스를 선언하여 패키지 외부에는 보이지 않게하기 
+    - 중첩 클래스를 사용한 은폐 
+      + 클래스 내부에 클래스를 선언하여 클래스끼리 관계가 있다는 걸 코드로 명시하기 
+  + 중개자 제거
+    - 대리자 은폐를 하면 클라이언트 클래스와 대리 클래스 사이의 관계는 끊기지만 서버 클래스 안에 위임 메서드가 늘어난다. 
+    - 클래스와 클래스 사이를 중개하는 역할을 중개자라고 하는데, 중개자의 역할을 적절히 제거하면 위임 메서드를 줄일 수 있다. 
+- 리팩토링 전 
+```java
+public class AddressFile
+{
+    private final Database database;
+    ...
+    public Database getDatabase()
+    {
+        return database;
+    }
+    ...
+}
+public class main
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            AddressFile file = new AddressFile("address.txt");
+            file.getDatabase().set("TOTO","toto@example.com");
+            file.getDatabase().set("Sato","sato@example.com");
+            file.getDatabase().update();
+
+            ...
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+```
+- 리팩토링 후   
+```java
+public class AddressFile
+{
+    private final Database database;
+    ...
+    public void set(String key, String value)
+    {
+        database.set(key, value);
+    }
+    public void get(String key)
+    {
+        database.get(key);
+    }
+    public void update() throws IOException
+    {
+        database.update();
+    }
+    ...
+}
+public class main
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            AddressFile file = new AddressFile("address.txt");
+            file.set("TOTO","toto@example.com");
+            file.set("Sato","sato@example.com");
+            file.update();
+
+            ...
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
