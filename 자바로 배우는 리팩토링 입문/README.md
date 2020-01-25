@@ -108,8 +108,12 @@ else
 
 ## 3장 어서션 도입
 : '이렇게 될 것이다'라는 주석이 있는 경우
-- 문제 
-  + 개발을 하다보면 '여기서 변수 value는 참일 것이다' 또는 '여기서 value > 0'이어야 한다 라는 경우가 생기는데, 주석 대신 어서션이라는 기법으로 프로그래머의 의도를 확실히 밝히면서도 실행 시 조건이 반드시 성립함을 보장하자.
+- 상황 
+  + 개발을 하다보면 '여기서 변수 value는 참일 것이다' 또는 '여기서 value > 0'이어야 한다 라는 경우가 생긴다.
+- 문제
+  + 주석으로 '이런 조건이 성립한다'라고 적어도 프로그램 실행 시 확인되지 않는다.  
+- 해법
+  + 주석 대신 어서션이라는 기법으로 프로그래머의 의도를 확실히 밝히면 실행 시 조건이 반드시 성립함을 보장할 수 있다. 
 - 결과
   + 해당 부분에서 성립해야 할 조건이 명확해지고 소스 코드가 읽기 좋아짐
   + 버그를 빨리 발견 가능함
@@ -127,7 +131,7 @@ else
   + `if(email != null)` 확인이 너무 많으면 `널 객체 도입`하자
 - 해법  
   + [null인지 확인하는 코드가 소스코드 곳곳에 존재](./4_Introduce_Null_Object/before/Person.java) -> [NullLabel 클래스 도입](./4_Introduce_Null_Object/refactoring/NullLabel.java)
-- null 확인을 모두 제거 하기위해 리팩토링을 하는게 아니다. null 확인이 너무 많아서 빠뜨리거나 실수할 것 같을 때 써야한다. 
+- null 확인을 모두 제거 하기위해 리팩토링을 하는게 아니다. `null 확인이 너무 많아서 빠뜨리거나 실수할 것 같을 때 써야한다.`
 - 방법
   + 널 클래스 작성 `NullLabel.java`
     - isNull 메서드 작성
@@ -310,9 +314,9 @@ class Author
 ```java
 public class Item
 {
-    public satic final int TYPECODE_BOOK = 0;
-    public satic final int TYPECODE_DVD = 1;
-    public satic final int TYPECODE_SOFTWARE = 2;
+    public static final int TYPECODE_BOOK = 0;
+    public static final int TYPECODE_DVD = 1;
+    public static final int TYPECODE_SOFTWARE = 2;
 
     private final int typecode;
 }
@@ -337,7 +341,7 @@ public class Item
 - 상황
   + 분류 코드마다 객체가 다른 동작을 함 
 - 문제
-  + switch 문을 써서 동작을 구분함. 객체 지향 프로그래밍이라면 switch 문은 악취가 난다고 판단한다. 
+  + switch 문을 써서 동작을 구분함. `객체 지향 프로그래밍이라면 switch 문은 악취가 난다고 판단한다. `
 - 해법
   + 분류 코드를 하위 클래스로 치환해서 다형적 메서드를 작성
 - 한 걸음 더 나아가기
@@ -410,11 +414,11 @@ public class ShapeOval extends Shape
 - 8장과 9장의 차이
   + 8장에서 배운 분류 코드를 하위 클래스로 치환은 프로그램 실행 중에 객체 분류 코드가 변한다면 사용할 수 없다. 그럴 때는 분류 코드를 상태/전략 패턴으로 치환 방법을 사용해야 한다. 
   + 코드 중간에 ShapeLine이 ShapeRectangle로 바뀌지 않을 때는 8장 방법을 사용하지만, 바뀐다면 9장 방법을 사용해야 함.
-  + 8장은 생성자에서 객체를 만들기 때문에 실행 중에 도형 종류가 변하지 않는 리팩토링이지만, 9장은 인스턴스의 특정 메서드를 호출할 때마다 상태가 변경되는 상태/전략 패턴을 이용한 리팩토링이다.   
+  + `8장은 생성자에서 객체를 만들기 때문에 실행 중에 도형 종류가 변하지 않는 리팩토링이지만, 9장은 인스턴스의 특정 메서드를 호출할 때마다 상태가 변경되는 상태/전략 패턴을 이용한 리팩토링이다.`   
 - 상황
   + 분류 코드마다 객체가 다른 동작을 함 
 - 문제
-  + `동작을 switch문으로 나누고 있지만 분류 코드가 동적으로 변하므로 분류 코드를 하위 클래스로 치환은 사용 불가`
+  + `동작을 switch문으로 나누고 있지만 분류 코드가 동적으로 변하므로 분류 코드를 하위 클래스로 치환 불가`
 - 해법 
   + 분류 코드를 나타내는 새로운 클래스를 작성해서 상태/전략 패턴을 사용함
 - 한 걸음 더 나아가기 
@@ -478,7 +482,7 @@ public class Logger
 ## 10장 에러 코드를 예외로 치환
 : 에러 처리가 흩어져 있는 경우
 - 문제 
-  + 정상 처리와 에러 처리가 혼재함 
+  + `정상 처리와 에러 처리가 혼재함` 
   + 에러 코드 전파 처리가 넓은 범위에 있음
 - 해법 
   + 에러 코드 대신에 예외를 사용함
@@ -491,9 +495,11 @@ public class Logger
 public void execute(String commandSequence)
 {
     StringTokenizer tokenizer = new StringTokenizer(commandSequence);
+
     while (tokenizer.hasMoreTokens())
     {
         String token = tokenizer.nextToken();
+
         if (!executeCommand(token))
         {
             System.out.println("Invalid command: " + token);
@@ -503,12 +509,14 @@ public void execute(String commandSequence)
 }
 ...
 public boolean executeCommand(String commandString)
+{
     Command command = Command.parseCommand(commandString);
     // 에러 전파 if 문
     if (command == null)
     {
         return false;
     }
+
     return executeCommand(command);
 }
 
@@ -518,6 +526,7 @@ public boolean executeCommand(String commandString)
 public void execute(String commandSequence)
 {
     StringTokenizer tokenizer = new StringTokenizer(commandSequence);
+
     try
     {
         while (tokenizer.hasMoreTokens())
@@ -541,7 +550,7 @@ public void executeCommand(String commandString) throws InvalidCommandException
 
 ## 11장 생성자를 팩토리 메서드로 치환
 : 클래스 이름이 new로 하드 코딩된 경우
-- new를 사용해 인스턴스를 만든다면 생성된 인스턴스의 구체적인 클래스명이 고정되어 버린다. 팩토리 메서드라고 부르는 인스턴스 생성 메서드를 사용하여 클래스명을 숨기자 
+- `new를 사용해 인스턴스를 만든다면 생성된 인스턴스의 구체적인 클래스명이 고정되어 버린다. 팩토리 메서드라고 부르는 인스턴스 생성 메서드를 사용하여 클래스명을 숨기자 `
   + 클래스 명을 숨기면 클래스 모드에 따라 달라지는 클래스명을 의식하지 않고 코딩할 수 있다. 
 - 문제
   + 생성하고 싶은 인스턴스가 속한 실제 클래스를 클라이언트에는 숨기고 싶음 
@@ -558,7 +567,7 @@ public void executeCommand(String commandString) throws InvalidCommandException
     - 생성자를 private로 만듦     
 - 한 걸음 더 나아가기
   + 팩토리 메서드와 생성 메서드
-    - 팩토리 메서드라는 용어는 편리해서 남용되는 경향이 있습니다. 넓은 의미로는 인스턴스를 생성하는 메서드를 모두 팩토리 메서드라고 부릅니다. 좁은 의미로는 GoF의 팩토리 메서드 패턴에 속하는 것만 팩토리 메서드라고 부릅니다. 
+    - 팩토리 메서드라는 용어는 편리해서 남용되는 경향이 있습니다. `넓은 의미로는 인스턴스를 생성하는 메서드를 모두 팩토리 메서드라고 부릅니다. 좁은 의미로는 GoF의 팩토리 메서드 패턴에 속하는 것만 팩토리 메서드라고 부릅니다.` 
     - 생성 메서드 = 인스턴스를 생성하는 메서드를 총칭
     - 팩토리 메서드 = GoF의 디자인 패턴과 의미가 같은 인스턴스 생성 메서드          
 - 리팩토링 전 
@@ -673,18 +682,18 @@ class Something
 
 ## 14장 대리자 은폐
 :위임 대상까지 노출되어 있는 경우
-![class_diagra](./14_HideDelegate/images/class_diagram.png)
+![class_diagram](./14_HideDelegate/images/class_diagram.PNG)
 - `각 클래스가 상세 구현을 다른 클래스에 지나치게 공개하면 관계가 복잡해진다. 클래스 사이의 관계를 단순화하려면 정보 은폐가 필요하다.` 
 - 문제
-  + 클라이언트 클래스가 서버 클래스뿐만 아니라 대리 클래스까지 이용함 
+  + `클라이언트 클래스가 서버 클래스뿐만 아니라 대리 클래스까지 이용함` 
 - 해법 
   + 서버 클래스에 위임 메서드를 추가해서 클라이언트 클래스로부터 대리 클래스를 은폐 
 - 결과
   + 클래스 사이의 불필요한 관계가 줄고 코드 수정이 쉬워짐 
   + 서버 클래스의 책임이 늘어남  
 - 방법 
-  + 1. 위임메서드 작성
-  + 2. 대리 클래스 은폐 
+  + 위임메서드 작성
+  + 대리 클래스 은폐 
 - 한 걸음 더 나아가기 
   + 숨기기의 중요성
     - 소프트웨어 개발에서 적절한 정보 은폐는 중요하다 
@@ -719,6 +728,7 @@ public class main
         try
         {
             AddressFile file = new AddressFile("address.txt");
+            // 클라이언트 클래스(Main)에서 AddressFile class(서버 클래스), Database class(대리 클래스)를 동시에 사용 
             file.getDatabase().set("TOTO","toto@example.com");
             file.getDatabase().set("Sato","sato@example.com");
             file.getDatabase().update();
@@ -775,9 +785,9 @@ public class main
 
 ## 15장 상속 구조 정리
 :상속이 엉켜 있는 경우 
-- 상속에 지나치게 의존해 이것저것 하위 클래스로 만들면 클래스 계층이 담당하는 역할이 모호해진다. 그러면 새로운 기능을 추가할 때 다음과 같은 문제가 생긴다.
-  + 클래스 계층의 어디에 새 기능을 넣어야 할지 알기 어려움
-  + 이용하고 싶은 코드가(부모가 아닌) 형제 클래스에 있어서 상속으로는 이용할 수 없음 
+- `상속에 지나치게 의존해 이것저것 하위 클래스로 만들면 클래스 계층이 담당하는 역할이 모호해진다.` 그러면 새로운 기능을 추가할 때 다음과 같은 문제가 생긴다.
+  + `클래스 계층의 어디에 새 기능을 넣어야 할지 알기 어려움`
+  + `이용하고 싶은 코드가(부모가 아닌) 형제 클래스에 있어서 상속으로는 이용할 수 없음` 
 - 문제 
   + 클래스 계층 하나에서 다양한 작업을 함 
 - 해법 
