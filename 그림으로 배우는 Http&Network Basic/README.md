@@ -175,5 +175,125 @@
   + `Cache-Control: max-age=604800(초)`: 최대 Age 값
   + `Cache-Control: s-maxage=604800(초)`: 공유 캐시 서버의 최대 Age 값 
 
+###### Connection: Hop-by-hop 헤더, 커넥션 관리 
+- 프록시에 더 이상 전송하지 않는 헤더 필드(hop-by-hop 헤더)를 지정
+- 지속적 접속관리 
+  + `Connection: Close`: 지속적 접속을 서버 측에서 명시적으로 접속을 끊고 싶을 경우에 사용한다.
+  + `Connection: Keep-Alive`: HTTP/1.1 이전 버전은 지속적 접속이 디폴트가 아니기 때문에, 지속적 접속을 하고 싶은 경우 지정해줘야 한다. 
 
+###### Date: 메시지 생성 날짜 
+- `Date: Tue, 03 Jul 2012 04:40:68 GMT`
+
+###### Pragma: 메시지 제어 
+- HTTP/1.0 버전과 호환성을 위해서 정의되어 있는 헤더 필드이다.
+- 중간 서버의 HTTP 버전에 HTTP/1.0이 있을 수 있으므로 캐시 동작 지정을 아래와 같이 양쪽으로 보내는 경우도 있다. 
+  ```
+  Cache-Control: no-cache
+  Pragma: no=cache 
+  ```
+
+###### Trailer: 메시지의 끝에 있는 헤더의 알람 
+```
+...
+Transfer-Encoding: chunked
+Trailer: Expires 
+...(메시지 바디)...
+0
+Expires: Tue, 28 Sep 2004 23:5959 GMT
+```
+- 메시지 바디의 뒤에 기술되어 있는 헤더 필드를 미리 전달 할 수 있습니다. 반드시 `청크 전송 인코딩`을 사용하고 있는 경우에 사용 가능하다.
+
+###### Transfer-Encoding: 메시지 바디의 전송 코딩 형식 지정 
+`Transfer-Encoding: chunked`
+- 메시지 바디의 전송 코딩 형식을 지정하는 경우에 사용한다. HTTP/1.1에는 `chuncked`만 지정이 가능하다.
+
+###### Upgrade: 다른 프로토콜에 업그레이드 
+- HTTP 및 다른 프로토콜의 새로운 버전이 통신에 사용되는 경우에 사용합니다.
+
+###### Via: 프록시 서버에 관한 정보 
+- 프록시 혹은 게이트웨이가 자신의 `경로`를 알리기 위해 Via 헤더에 추가한다. 
+- 메시지의 추적과 리퀘스트 루프의 회피 등에 사용된다. 
+
+###### Warning: 에러 통지 
+- 리스폰스에 관한 추가 정보를 전달합니다. 기본적으로 캐시에 관한 문제의 경고 를 유저에 전달한다.
+
+#### HTTP/1.1 리퀘스트 헤더 필드 
+
+###### Accept: 유저 에이전트가 처리 가능한 미디어 타입
+`Accept: text/html, application/xhtml+xml,application/xml;q=0.9,*/*,q=0.8`
+- 유저 에이전트에 처리할 수 있는 미디어 타입과 미디어 타입의 상대적인 우선 순위를 전달하기 위해서 사용된다. 
+- 표시하는 미디어 타입에 `우선 순위`를 붙이고 싶을 경우에는 세미콜론 ";"으로 구분하고 "q="로 표시할 `품질 지수`를 더한다. 품질 계수의 디폴트 값은 1.0이다. 
+
+###### Accept-Charset: 문자셋 우선 순위 
+`Accept-Charset: iso-8859-5, unicode-1-1:q+0.8`
+- 유저 에이전트에서 처리할 수 있는 문자셋으로, 문자셋의 상대적인 우선 순위를 전달하기 위해 사용된다. 
+- 서버 구동형 네고시에이션에서 이용
+
+###### Accept-Encoding: 콘텐츠 인코딩 우선 순위 
+`Accept-Encoding: gzip, deflate`
+- 유저 에이전트가 처리할 수 있는 콘텐츠 코딩과 콘텐츠 코딩의 상대적인 우선 순위를 전달하기 위해 사용된다. 
+
+###### Accept-Language: 언어 우선 순위 
+`Accept-Language: ko-kr, en-us;q=0.7,en;q=0.3`
+- 유저 에이전트가 처리할 수 있는 자연어의 세트(한국어+영어)와 자연어 세트의 상대적인 우선 순위를 전달하기 위해 사용 
+
+###### Authorization: 웹 인증을 위한 정보 
+`Authorization: Basic dWVub3NlbjpwYXNzd29yZA==`
+- 유저 에이전트의 인증 정보를 전달하기 위해 사용
+
+###### Expect: 서버에 대한 특정 동작의 기대 
+`Expect: 100-continue`
+- 클라이언트가 서버에 특정 동작 요구를 전달한다.
+
+###### From: 유저의 메일 주소 
+`From: info@hackr.jp`
+- 유저 에이전트를 사용하고 있는 유저의 메일 주소를 전달한다. (경우에 따라 User-Agent 헤더 필드도 사용함)
+
+###### Host: 요구된 리소스의 호스트 
+`Host: www.hackr.jp`
+-  Host 헤더 필드는 리퀘스트한 리소스의 인터넷 호스트와 포트번호를 전달한다. Host 헤더 필드는 HTTP/1.1에서 유일한 필수 헤더 필드이다. 서버에 Host 명이 없는 경우 비워서 전송한다.
+
+###### If-Match: 엔티티 태그의 비교 
+`If-Match: "123456"`
+- 요청한 리소스의 엔티티태그가 "123456"인 경우에만 리퀘스트를 받는다. 아닌 경우에는 412 Precondition Failed를 전달한다.
+
+###### If-Modified-Since: 리소스의 갱신 시간 비교 
+`If-Modified-Since : Thu, 15 Apr 2004 00:00:00 GMT`
+- 리소스가 2004년 4월 15일 이후에 갱신되었다면 리퀘스트를 받는다. 아닌 경우에는 304 Not Modified를 전달한다. 
+
+###### If-None-Match: 엔티티 태그의 비교(If-Match의 반대)
+- 지정된 값이 일치하지 않으면 리퀘스트를 받는다. 
+
+###### If-Range: 리소스가 생신되지 않은 경우에 엔티티의 바이트 범위의 요구를 송신 
+`If-Range : "123456" Range: byte=5001-10000`
+- 리소스의 엔티티 태그가 "123456"이면 서버는 요청한 5000 바이트만 전송한다. 
+
+###### If-Unmodified-Since: 리소스의 갱신 시간 비교(If-Modified-Since의 반대)
+- 지정된 리소스가 필드 값에 지정된 날짜 이후에 갱신되어 있지 않는 경우에만 리퀘스트를 받는다.
+
+###### Max-Forwards: 최대 전송 홉수 
+`Max-forwards: 10`
+- TRACE 혹은 OPTIONS 메소드에 의한 리퀘스트를 할 때에 전송해도 좋은 서버 수의 최대치를 10진수 정수로 지정한다. 
+- 서버는 다음 서버에 리퀘스트를 전송할 때는 값에서 1을 빼서 다시 세트한다. Max-Forwards 값이 0이로 바뀐 서버는 response를 반환한다.
+- 필드 값이 0이 되었던 서버가 response를 하기 때문에 그 서버까지의 상황을 알 수 있다. 
+
+###### Proxy-Authorization: 프록시 서버의 클라이언트 인증을 위한 정보 
+`Proxy-Authorization : Basic dGlwOjkpNLAGfFY5`
+- 클라이언트와 서버의 HTTP 엑세스 인증과 비슷한데 다른 점은 클라이언트와 프록시 사이에 인증이 이루어진다.
+
+###### Range: 엔티티 바이트 범위 요구 
+`Range : byte=5001-10000`
+- 리소스의 일부분만 취득하는 Range request를 할 때 지정범위이다.
+
+###### Referer: 리퀘스트중의 URI를 취득하는 곳
+`Referer : http://www.hackr.jp/index.html`
+- 현재 보내고 있는 리퀘스트를 어느 웹 페이지에서부터 발행되었는지를 전달한다. 보안상 바람직하지 않다고 판단되는 경우는 보내지 않아도 된다.
+
+###### TE: 전송 인코딩의 우선 순위
+`TE: gzip, deflate;q=0.5`
+- response로 받을 수 있는 전송 코딩의 형식과 상대적인 우선 순위를 전달한다. 
+
+###### User-Agent: HTTP 클라이언트의 정보 
+`User-Agent:Mozila/5.0(Windows NT 6.1) AppleWebKit/535.19 ...`
+- 리퀘스트를 생성한 브라우저와 유저 에이전트의 이름 등을 전달하기 위한 필드이다.
 
