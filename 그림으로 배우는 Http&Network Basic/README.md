@@ -297,3 +297,42 @@ Expires: Tue, 28 Sep 2004 23:5959 GMT
 `User-Agent:Mozila/5.0(Windows NT 6.1) AppleWebKit/535.19 ...`
 - 리퀘스트를 생성한 브라우저와 유저 에이전트의 이름 등을 전달하기 위한 필드이다.
 
+#### HTTP/1.1 리스폰스 헤더 필드 
+
+###### Accept-Ranges: 바이트 단위의 요구를 수신할 수 있는지 없는지 여부
+`Accept-Ranges: bytes`
+- 서버가 리소스의 일부분만 전송하는 것에 동의하면 bytes 불가능한 경우에는 none을 전달한다. 
+
+###### Age: 유저 에이전트가 처리 가능한 미디어 타입
+`Age: 600`
+- 얼마나 오래 전에 오리진 서버에서 response가 생성되었는지를 전달 
+
+###### ETag: 유저 에이전트가 처리 가능한 미디어 타입
+`ETag: "82e222293907...`
+- 엔티티 태그라고 불리며 일의적으로 리소스를 특정하기 위한 문자열을 전달한다. 서버는 리소스마다 ETag 값을 할당한다.
+
+###### Location: 유저 에이전트가 처리 가능한 미디어 타입
+`Location: http://www.usagidesign.jp/sample.html`
+- 대부분의 브라우저에서는 Location 헤더 필드를 포함한 response를 받으면 강제로 리다이렉트 하는 곳의 리소스에 액세스를 시도한다. 
+
+###### Proxy-Authenticate: 유저 에이전트가 처리 가능한 미디어 타입
+`Proxy-Authenticate: Basic realm="Usagidesign Auth`
+- 클라이언트와 프록시 사이에서 인증이 이루어진다.
+
+###### Retry-After: 유저 에이전트가 처리 가능한 미디어 타입
+`Retry-After: 120`
+- 클라이언트가 일정 시간 후에 리퀘스트를 다시 시행해야 하는지를 전달한다. 
+
+###### Server: 유저 에이전트가 처리 가능한 미디어 타입
+`Server: Apache/2.2.17(Unix)`
+- 서버에 설치되어 있는 HTTP 서버의 소프트웨어를 전달한다.
+
+###### Vary: 유저 에이전트가 처리 가능한 미디어 타입
+`Vary: Accept-Language`
+- 캐시를 컨트롤하기 위해서 사용한다. Vary에 지정되어 있는 헤더 필드를 가진 request에 대해서만 캐시를 반환할 수 있다. 
+
+###### WWW-Authenticate: 유저 에이전트가 처리 가능한 미디어 타입
+`WWW-Authenticate: Basic realm="Usagidesign Auth`
+- HTTP 엑세스 인증에 사용되는데 Request-URI에 지정했던 리소스에 적용할 수 있는 인증 스키마와 파라미터를 나타내는 challenge를 전달한다. 
+
+
