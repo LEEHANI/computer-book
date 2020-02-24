@@ -335,4 +335,65 @@ Expires: Tue, 28 Sep 2004 23:5959 GMT
 `WWW-Authenticate: Basic realm="Usagidesign Auth`
 - HTTP 엑세스 인증에 사용되는데 Request-URI에 지정했던 리소스에 적용할 수 있는 인증 스키마와 파라미터를 나타내는 challenge를 전달한다. 
 
+## 제7장 웹을 안전하게 지켜주는 HTTPS
 
+
+## 제 8장 누가 액세스하고 있는지를 확인하는 인증 
+- 서버에 액세스하고 있는 사람이 누구인지, 본인인지 아닌지를 확인하기 위해 [등록된 본인만이 알고 있는 정보]나 [등록한 본인만이 가지고 있는 정보] 등으로 확인해야한다. 
+
+#### BASIC 인증 
+- HTTP/1.0에 구현된 인증 방식으로 현재도 일부 사용 중이다.
+- 인증 수순 
+  - request 
+    ```
+    GET /private/HTTP/1.1 Host:hackr.jp
+    ```
+  - 상태 코드 401로 응답해서 인증이 필요하다는 것을 전달  
+    ```
+    HTTP/1.1 401 Aunthorization Required  
+    date: ...
+    Server: ...
+    WWW-Authenticate Basic realm="Input Your ID and Password"
+    ```
+  - 유저ID와 패스워드를 Base64 형식으로 인코드 한 것을 송신
+    ```
+    GET /private/HTTTP/1.1
+    Host: hackr.jp
+    Authorization: Basic Z3Vic3Q6Zviq3==
+    ```  
+  - 인증 성공 했을 시 200으로 응답, 실패했을 시 401로 응답
+    ```
+    HTTP/1.1 200 OK
+    Date: ...
+    Server: ...
+    ```  
+- 문제점
+  - BASIC 인증에서는 Base64라는 인코딩 형식을 사용하는데 이것은 암호화가 아니기 때문에 통신 경로 상에서 복호화된 유저 ID와 패스워트를 빼앗길 가능성이 있다.
+  - 한번 BASIC 인증을 하면, 일반 브라우저에서는 로그아웃할 수 없다.
+- BASCI 인증은 사용상의 문제와 많은 웹 사이트에서 요구되는 보안 등급에 미치지 못한다는 면에서 `그다지 사용되고 있지 않다.`
+
+#### DIGEST 인증 
+- BASIC 인증의 약점을 보안한 방식이다.
+- 인증 수순 
+  - request 
+    ```
+    GET /private/HTTP/1.1 Host:hackr.jp
+    ```
+  - 상태 코드 401로 응답해서 인증이 필요하다는 것을 전달하면서 패스워드와 챌린지 코드(nonce)를 송신 
+    ```
+    HTTP/1.1 401 Aunthorization Required  
+    WWW-Authenticate DIGEST realm="DIGEST", nonce="MOSQZ0..., algorithm=MD5, qop="auth"
+    ```
+  - 패스워드 문자열을 MD5로 계산해 리스폰스 코드로 송신
+    ```
+    GET /digest/HTTP/1.1  
+    WWW-Authenticate DIGEST realm="DIGEST", nonce="MOSQZ0..., uri="/digest/", algorithm=MD5, response="df563709agaw...", qop="auth" ...
+    ```
+  - 인증 성공 했을 시 200으로 응답, 실패했을 시 401로 응답
+    ```
+    HTTP/1.1 200 OK
+    Authentication-Info:
+    ...
+    ```
+- BASIC 인증보다 보인 등급은 높지만, 사용상의 문제와 많은 웹 사이트에서 요구되는 보안 등급에는 미치지 못한다는 점에서 `그다지 사용되고 있지 않다.`
+- 패스워드의 도청을 방지하기 위한 보호 기능은 제공하고 있지만 위장은 방지하지 못한다.
