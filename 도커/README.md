@@ -17,5 +17,6 @@
 - 컨테이너 정지하기 `docker stop`
 - 컨테이너 삭제하기 `docker rm mysql`
 - 외부에서 컨테이너 내부에 명령하기 `docker exec [컨테이너이름] [명령] [매개변수]`
+  + ex) `docker exec -it mysql_boot bash`
 
 
